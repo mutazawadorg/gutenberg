@@ -167,6 +167,8 @@ function wrapperSelector( select ) {
 		getBlockRootClientId,
 		getBlock,
 		getBlockParents,
+		getSettings,
+		isNavigationMode: _isNavigationMode,
 		__experimentalGetBlockListSettingsForBlocks,
 	} = select( blockEditorStore );
 
@@ -193,10 +195,14 @@ function wrapperSelector( select ) {
 				?.__experimentalCaptureToolbars
 	);
 
+	const settings = getSettings();
+
 	return {
 		clientId,
 		rootClientId: getBlockRootClientId( clientId ),
 		name,
+		hasReducedUI: settings.hasReducedUI,
+		isNavigationMode: _isNavigationMode(),
 		isEmptyDefaultBlock:
 			name && isUnmodifiedDefaultBlock( { name, attributes } ),
 		capturingClientId,
@@ -219,7 +225,13 @@ export default function WrappedBlockPopover( {
 		name,
 		isEmptyDefaultBlock,
 		capturingClientId,
+		hasReducedUI,
+		isNavigationMode,
 	} = selected;
+
+	if ( hasReducedUI && ! isNavigationMode ) {
+		return null;
+	}
 
 	if ( ! name ) {
 		return null;
