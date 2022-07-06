@@ -32,9 +32,10 @@ import { useRandomizer } from './hooks';
 function ScreenRoot() {
 	const { variations } = useSelect( ( select ) => {
 		return {
-			variations: select(
-				coreStore
-			).__experimentalGetCurrentThemeGlobalStylesVariations(),
+			variations:
+				select(
+					coreStore
+				).__experimentalGetCurrentThemeGlobalStylesVariations(),
 		};
 	}, [] );
 
@@ -108,9 +109,7 @@ function ScreenRoot() {
 						icon={ reusableBlock }
 						label={ __( 'Randomize colors' ) }
 						onClick={ randomizeTheme }
-					>
-						{ __( 'Randomize' ) }
-					</Button>
+					/>
 				</CardFooter>
 			</Flex>
 		</Card>
