@@ -2,7 +2,8 @@
  * External dependencies
  */
 import { get, cloneDeep, set, isEqual } from 'lodash';
-import { colord } from 'colord';
+import { colord, extend } from 'colord';
+import a11yPlugin from 'colord/plugins/a11y';
 
 /**
  * WordPress dependencies
@@ -20,6 +21,9 @@ import {
  */
 import { getValueFromVariable, getPresetVariableFromValue } from './utils';
 import { GlobalStylesContext } from './context';
+
+// Enable colord's a11y plugin.
+extend( [ a11yPlugin ] );
 
 const EMPTY_CONFIG = { settings: {}, styles: {} };
 
@@ -331,43 +335,15 @@ export function useRandomizer( name ) {
 	);
 
 	function randomizeColors() {
-		/* const [ themeColors, setThemeColors ] = useSetting(
-		'color.palette.theme',
-		name
-	);
-
-	function randomizeColors() {
-		/*
-			Randomizing lightness — changing the limits of the color range — allows for a wider range of
-			color combinations.
-		*/
 		/* eslint-disable no-restricted-syntax */
-		// const minLightness = Math.random() * ( 0.3 - 0.01 ) + 0.1; // Generate a random number between 0.1 and 0.3
-		// const maxLightneess = Math.random() * ( 0.99 - 0.8 ) + 0.8; // Generate a random numbet between 0.8 and 0.99
+		const randomRotationValue = Math.floor( Math.random() * 225 );
 		/* eslint-enable no-restricted-syntax */
-
-		/*
-			Generates a color scale based on hue scale rotations in the Cubehelix color scheme,
- 			from lightest to darkest.
-			Cubehelix is a data visualization color scheme, which can be easily used to generate
-			palettes whose colors are perceived to be increasing in intensity.
-			Using hue rotations assists in making sure that "good" contrast is generated between
-			foreground and background colors.
-	 */
-		// const colorScale = chroma
-		// 	.cubehelix()
-		// 	/* eslint-disable-next-line no-restricted-syntax */
-		// 	.start( Math.floor( Math.random() * 360 ) ) // Generate a random start point for the hue scale.
-		// 	.rotations( 0.75 )
-		// 	.lightness( [ minLightness, maxLightneess ] ) // Defines minimum and maximum lightness of first and last colors,
-		// 	// respectively. By default, the ends of scales are black and white.
-		// 	.scale() // convert to chroma.scale
-		// 	.correctLightness()
-		// 	.colors( themeColors.length );
 
 		const newColors = themeColors.map( ( colorObject ) => {
 			const { color } = colorObject;
-			const newColor = colord( color ).rotate( 75 ).toHex();
+			const newColor = colord( color )
+				.rotate( randomRotationValue )
+				.toHex();
 
 			return {
 				...colorObject,
