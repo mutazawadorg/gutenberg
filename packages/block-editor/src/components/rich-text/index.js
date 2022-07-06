@@ -145,6 +145,7 @@ function RichTextWrapper(
 			isSelected,
 		};
 	};
+
 	// This selector must run on every render so the right selection state is
 	// retreived from the store on merge.
 	// To do: fix this somehow.
@@ -171,6 +172,16 @@ function RichTextWrapper(
 				)
 			);
 	}
+
+	// Check reduced UI to force the inline formatting toolbar
+	const distractionFreeSelector = ( select ) => {
+		const { getSettings } = select( blockEditorStore );
+		const settings = getSettings();
+		return {
+			hasReducedUI: settings.hasReducedUI,
+		};
+	};
+	const { hasReducedUI } = useSelect( distractionFreeSelector );
 
 	const onSelectionChange = useCallback(
 		( start, end ) => {
@@ -343,7 +354,11 @@ function RichTextWrapper(
 			) }
 			{ isSelected && hasFormats && (
 				<FormatToolbarContainer
-					inline={ inlineToolbar }
+					inline={
+						! isCollapsed( value ) && hasReducedUI
+							? true
+							: inlineToolbar
+					}
 					anchorRef={ anchorRef }
 					value={ value }
 				/>
