@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { get, cloneDeep, set, isEqual } from 'lodash';
-import chroma from 'chroma-js';
+import { colord } from 'colord';
 
 /**
  * WordPress dependencies
@@ -331,13 +331,19 @@ export function useRandomizer( name ) {
 	);
 
 	function randomizeColors() {
+		/* const [ themeColors, setThemeColors ] = useSetting(
+		'color.palette.theme',
+		name
+	);
+
+	function randomizeColors() {
 		/*
 			Randomizing lightness — changing the limits of the color range — allows for a wider range of
 			color combinations.
 		*/
 		/* eslint-disable no-restricted-syntax */
-		const minLightness = Math.random() * ( 0.3 - 0.01 ) + 0.1; // Generate a random number between 0.1 and 0.3
-		const maxLightneess = Math.random() * ( 0.99 - 0.8 ) + 0.8; // Generate a random numbet between 0.8 and 0.99
+		// const minLightness = Math.random() * ( 0.3 - 0.01 ) + 0.1; // Generate a random number between 0.1 and 0.3
+		// const maxLightneess = Math.random() * ( 0.99 - 0.8 ) + 0.8; // Generate a random numbet between 0.8 and 0.99
 		/* eslint-enable no-restricted-syntax */
 
 		/*
@@ -348,30 +354,24 @@ export function useRandomizer( name ) {
 			Using hue rotations assists in making sure that "good" contrast is generated between
 			foreground and background colors.
 	 */
-		const colorScale = chroma
-			.cubehelix()
-			/* eslint-disable-next-line no-restricted-syntax */
-			.start( Math.floor( Math.random() * 360 ) ) // Generate a random start point for the hue scale.
-			.rotations( 0.75 )
-			.lightness( [ minLightness, maxLightneess ] ) // Defines minimum and maximum lightness of first and last colors,
-			// respectively. By default, the ends of scales are black and white.
-			.scale() // convert to chroma.scale
-			.correctLightness()
-			.colors( themeColors.length );
+		// const colorScale = chroma
+		// 	.cubehelix()
+		// 	/* eslint-disable-next-line no-restricted-syntax */
+		// 	.start( Math.floor( Math.random() * 360 ) ) // Generate a random start point for the hue scale.
+		// 	.rotations( 0.75 )
+		// 	.lightness( [ minLightness, maxLightneess ] ) // Defines minimum and maximum lightness of first and last colors,
+		// 	// respectively. By default, the ends of scales are black and white.
+		// 	.scale() // convert to chroma.scale
+		// 	.correctLightness()
+		// 	.colors( themeColors.length );
 
-		/*
-			The following code is just a test, and it relies on the array of theme colors being in the following order,
-			by slug/name:
-			1. Foreground
-			2. Background
-			3. Primary
-			4. Secondary
-			5. Tertiary
-		*/
-		const newColors = themeColors.map( ( color, index ) => {
+		const newColors = themeColors.map( ( colorObject ) => {
+			const { color } = colorObject;
+			const newColor = colord( color ).rotate( 75 ).toHex();
+
 			return {
-				...color,
-				color: colorScale[ index ],
+				...colorObject,
+				color: newColor,
 			};
 		} );
 
