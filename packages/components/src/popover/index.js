@@ -144,7 +144,8 @@ const Popover = (
 		onFocusOutside,
 		__unstableSlotName = SLOT_NAME,
 		__unstableObserveElement,
-		__unstableForcePosition = false,
+		__unstableFlip = true,
+		__unstableResize = true,
 		__unstableShift = false,
 		...contentProps
 	},
@@ -233,10 +234,9 @@ const Popover = (
 				crossAxis: frameOffsetRef.current[ crossAxis ],
 			};
 		} ),
-		__unstableForcePosition ? undefined : flip(),
-		__unstableForcePosition
-			? undefined
-			: size( {
+		__unstableFlip ? flip() : undefined,
+		__unstableResize
+			? size( {
 					apply( sizeProps ) {
 						const { availableHeight } = sizeProps;
 						if ( ! refs.floating.current ) return;
@@ -246,7 +246,8 @@ const Popover = (
 							overflow: 'auto',
 						} );
 					},
-			  } ),
+			  } )
+			: undefined,
 		__unstableShift
 			? shift( {
 					crossAxis: true,
