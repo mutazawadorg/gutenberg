@@ -1,9 +1,15 @@
 /**
  * WordPress dependencies
  */
-import { useEffect, useState, useMemo, useCallback } from '@wordpress/element';
+import {
+	Suspense,
+	useEffect,
+	useState,
+	useMemo,
+	useCallback,
+} from '@wordpress/element';
 import { useSelect, useDispatch } from '@wordpress/data';
-import { Popover, Button, Notice } from '@wordpress/components';
+import { Popover, Button, Notice, Spinner } from '@wordpress/components';
 import { EntityProvider, store as coreStore } from '@wordpress/core-data';
 import {
 	BlockContextProvider,
@@ -60,6 +66,31 @@ const interfaceLabels = {
 	/* translators: accessibility text for the navigation sidebar landmark region. */
 	drawer: __( 'Navigation Sidebar' ),
 };
+
+const LoadingScreen = () => (
+	<div
+		style={ {
+			position: 'fixed',
+			top: 0,
+			left: 0,
+			width: '100%',
+			height: '100%',
+			background: '#fff',
+			zIndex: 999999,
+		} }
+	>
+		<div
+			style={ {
+				display: 'flex',
+				alignItems: 'center',
+				justifyContent: 'center',
+				height: '100%',
+			} }
+		>
+			<Spinner />
+		</div>
+	</div>
+);
 
 function Editor( { onError } ) {
 	const {
@@ -254,7 +285,11 @@ function Editor( { onError } ) {
 											}
 											notices={ <EditorSnackbars /> }
 											content={
-												<>
+												<Suspense
+													fallback={
+														<LoadingScreen />
+													}
+												>
 													<EditorNotices />
 													<BlockStyles.Slot scope="core/block-inspector" />
 													{ editorMode === 'visual' &&
@@ -289,7 +324,7 @@ function Editor( { onError } ) {
 															openEntitiesSavedStates
 														}
 													/>
-												</>
+												</Suspense>
 											}
 											actions={
 												<>
