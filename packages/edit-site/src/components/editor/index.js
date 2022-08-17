@@ -87,7 +87,7 @@ const LoadingScreen = () => (
 				height: '100%',
 			} }
 		>
-			<Spinner />
+			<Spinner style={ { width: 64, height: 64 } } />
 		</div>
 	</div>
 );
