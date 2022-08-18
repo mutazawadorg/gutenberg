@@ -37,6 +37,13 @@ export function registerAccessToken( accessToken, packageName ) {
 	if ( packageName in registeredExperiments ) {
 		throw new Error( `Package ${ packageName } is already registered.` );
 	}
+	if (
+		! accessToken.i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed
+	) {
+		throw new Error(
+			`You need to confirm you know the consequences of using the experimental APIs.`
+		);
+	}
 	accessTokens.push( accessToken );
 	registeredExperiments[ packageName ] = { experiments: {}, accessToken };
 }
