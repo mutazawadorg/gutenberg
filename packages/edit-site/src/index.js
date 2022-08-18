@@ -22,6 +22,7 @@ import { getQueryArgs } from '@wordpress/url';
 /**
  * Internal dependencies
  */
+import './experiments';
 import './hooks';
 import { store as editSiteStore } from './store';
 import EditSiteApp from './components/app';

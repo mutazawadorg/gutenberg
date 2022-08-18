@@ -9,15 +9,14 @@ import classnames from 'classnames';
 import { useViewportMatch, useMergeRefs } from '@wordpress/compose';
 import { forwardRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
-import {
-	getBlockType,
-	store as blocksStore,
-	__unstableGetInnerBlocksProps as getInnerBlocksProps,
-} from '@wordpress/blocks';
+import { getBlockType, store as blocksStore } from '@wordpress/blocks';
 
 /**
  * Internal dependencies
  */
+import { getExperimentalAPIs } from '../../experiments';
+const { __unstableGetInnerBlocksProps: getInnerBlocksProps } =
+	getExperimentalAPIs( '@wordpress/blocks' );
 import ButtonBlockAppender from './button-block-appender';
 import DefaultBlockAppender from './default-block-appender';
 import useNestedSettingsUpdate from './use-nested-settings-update';

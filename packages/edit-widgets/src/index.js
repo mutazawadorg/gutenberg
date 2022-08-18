@@ -3,18 +3,11 @@
  */
 import {
 	registerBlockType,
-	unstable__bootstrapServerSideBlockDefinitions, // eslint-disable-line camelcase
 	setFreeformContentHandlerName,
-	store as blocksStore,
 } from '@wordpress/blocks';
 import { dispatch } from '@wordpress/data';
 import { render, unmountComponentAtNode } from '@wordpress/element';
-import {
-	registerCoreBlocks,
-	__experimentalGetCoreBlocks,
-	__experimentalRegisterExperimentalCoreBlocks,
-} from '@wordpress/block-library';
-import { __experimentalFetchLinkSuggestions as fetchLinkSuggestions } from '@wordpress/core-data';
+import { registerCoreBlocks } from '@wordpress/block-library';
 import {
 	registerLegacyWidgetBlock,
 	registerLegacyWidgetVariations,
@@ -25,15 +18,30 @@ import { store as preferencesStore } from '@wordpress/preferences';
 /**
  * Internal dependencies
  */
+import { getExperimentalAPIs } from './experiments';
+import {
+	ALLOW_REUSABLE_BLOCKS,
+	ENABLE_EXPERIMENTAL_FSE_BLOCKS,
+} from './constants';
+
+const { __experimentalFetchLinkSuggestions: fetchLinkSuggestions } =
+	getExperimentalAPIs( '@wordpress/core-data' );
+
+const {
+	__experimentalGetCoreBlocks,
+	__experimentalRegisterExperimentalCoreBlocks,
+} = getExperimentalAPIs( '@wordpress/block-library' );
+
+const {
+	__experimentalReapplyBlockTypeFilters,
+	unstable__bootstrapServerSideBlockDefinitions,
+} = getExperimentalAPIs( '@wordpress/blocks' );
+
 import './store';
 import './filters';
 import * as widgetArea from './blocks/widget-area';
 
 import Layout from './components/layout';
-import {
-	ALLOW_REUSABLE_BLOCKS,
-	ENABLE_EXPERIMENTAL_FSE_BLOCKS,
-} from './constants';
 
 const disabledBlocks = [
 	'core/more',
@@ -85,7 +93,8 @@ export function initialize( id, settings ) {
 		themeStyles: true,
 	} );
 
-	dispatch( blocksStore ).__experimentalReapplyBlockTypeFilters();
+	__experimentalReapplyBlockTypeFilters();
+
 	registerCoreBlocks( coreBlocks );
 	registerLegacyWidgetBlock();
 	if ( process.env.IS_GUTENBERG_PLUGIN ) {

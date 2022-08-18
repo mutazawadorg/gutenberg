@@ -25,7 +25,6 @@ import { useContext, useMemo } from '@wordpress/element';
 import { getCSSRules } from '@wordpress/style-engine';
 import {
 	__unstablePresetDuotoneFilter as PresetDuotoneFilter,
-	__experimentalGetGapCSSValue as getGapCSSValue,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
 
@@ -35,6 +34,10 @@ import {
 import { PRESET_METADATA, ROOT_BLOCK_SELECTOR, scopeSelector } from './utils';
 import { GlobalStylesContext } from './context';
 import { useSetting } from './hooks';
+import { getExperimentalAPIs } from '../../experiments';
+const getGapCSSValue = getExperimentalAPIs(
+	'@wordpress/block-editor'
+).__experimentalGetGapCSSValue;
 
 // List of block support features that can have their related styles
 // generated under their own feature level selector rather than the block's.

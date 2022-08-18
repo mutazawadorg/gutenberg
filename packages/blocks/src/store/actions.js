@@ -14,6 +14,7 @@ import { applyFilters } from '@wordpress/hooks';
  */
 import { isValidIcon, normalizeIconObject } from '../api/utils';
 import { DEPRECATED_ENTRY_KEYS } from '../api/constants';
+import { store as blockStore } from './';
 
 /** @typedef {import('../api/registration').WPBlockVariation} WPBlockVariation */
 /** @typedef {import('../api/registration').WPBlockType} WPBlockType */
@@ -196,7 +197,8 @@ export const __experimentalRegisterBlockType =
  */
 export const __experimentalReapplyBlockTypeFilters =
 	() =>
-	( { dispatch, select } ) => {
+	( { registry } ) => {
+		const select = registry.select( blockStore );
 		const unprocessedBlockTypes =
 			select.__experimentalGetUnprocessedBlockTypes();
 
@@ -218,7 +220,7 @@ export const __experimentalReapplyBlockTypeFilters =
 			return;
 		}
 
-		dispatch.addBlockTypes( processedBlockTypes );
+		registry.dispatch( blockStore ).addBlockTypes( processedBlockTypes );
 	};
 
 /**

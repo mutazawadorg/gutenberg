@@ -6,6 +6,7 @@ import { createReduxStore, register } from '@wordpress/data';
 /**
  * Internal dependencies
  */
+import './experiments';
 import reducer from './reducer';
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -70,8 +71,10 @@ register( store );
 export { default as EntityProvider } from './entity-provider';
 export { default as useEntityRecord } from './hooks/use-entity-record';
 export { default as useEntityRecords } from './hooks/use-entity-records';
-export { default as __experimentalUseResourcePermissions } from './hooks/use-resource-permissions';
+import { default as __experimentalUseResourcePermissions } from './hooks/use-resource-permissions';
+export { __experimentalUseResourcePermissions };
 export * from './entity-provider';
 export * from './entity-types';
 export * from './fetch';
 export * from './hooks';
+

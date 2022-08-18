@@ -6,6 +6,7 @@ import combineReducers from 'turbo-combine-reducers';
 /**
  * Internal dependencies
  */
+import { registerExperimentalAPIs } from './experiments';
 import defaultRegistry from './default-registry';
 import * as plugins from './plugins';
 
@@ -228,3 +229,15 @@ export const use = defaultRegistry.use;
  * @param {StoreDescriptor} store Store descriptor.
  */
 export const register = defaultRegistry.register;
+
+function __experimentalPrivateSelector( { name }, selector ) {
+	return defaultRegistry.stores[ name ].store.select( selector );
+}
+function __experimentalPrivateDispatch( { name }, actionThunk ) {
+	return defaultRegistry.stores[ name ].store.dispatch( actionThunk );
+}
+
+registerExperimentalAPIs( {
+	__experimentalPrivateSelector,
+	__experimentalPrivateDispatch,
+} );

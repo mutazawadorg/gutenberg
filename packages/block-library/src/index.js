@@ -12,6 +12,7 @@ import {
 /**
  * Internal dependencies
  */
+import { registerExperimentalAPIs } from './experiments';
 // When IS_GUTENBERG_PLUGIN is set to false, imports of experimental blocks
 // are transformed by packages/block-library/src/index.js as follows:
 //    import * as experimentalBlock from './experimental-block'
@@ -306,3 +307,8 @@ export const __experimentalRegisterExperimentalCoreBlocks = process.env
 				.forEach( registerBlock );
 	  }
 	: undefined;
+
+registerExperimentalAPIs( {
+	__experimentalGetCoreBlocks,
+	__experimentalRegisterExperimentalCoreBlocks,
+} );
