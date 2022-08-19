@@ -14,15 +14,7 @@ import {
 	registerWidgetGroupBlock,
 } from '@wordpress/widgets';
 import { store as preferencesStore } from '@wordpress/preferences';
-import {
-	registerAccessToken,
-	getExperimentalAPIs,
-} from '@wordpress/experiments';
-
-export const ACCESS_TOKEN = {
-	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
-};
-registerAccessToken( ACCESS_TOKEN, '@wordpress/edit-widgets' );
+import { __dangerousOptInToUnstableAPIsOnlyForCoreModules } from '@wordpress/experiments';
 
 /**
  * Internal dependencies
@@ -32,19 +24,25 @@ import {
 	ENABLE_EXPERIMENTAL_FSE_BLOCKS,
 } from './constants';
 
+const { getExperimentalAPIs } =
+	__dangerousOptInToUnstableAPIsOnlyForCoreModules(
+		'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.',
+		'@wordpress/edit-widgets'
+	);
+
 const { __experimentalFetchLinkSuggestions: fetchLinkSuggestions } =
-	getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/core-data' );
+	getExperimentalAPIs( '@wordpress/core-data' );
 
 const {
 	__experimentalGetCoreBlocks,
 	__experimentalRegisterExperimentalCoreBlocks,
-} = getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/block-library' );
+} = getExperimentalAPIs( '@wordpress/block-library' );
 
 const {
 	__experimentalReapplyBlockTypeFilters,
 	// eslint-disable-next-line camelcase
 	unstable__bootstrapServerSideBlockDefinitions,
-} = getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/blocks' );
+} = getExperimentalAPIs( '@wordpress/blocks' );
 
 import './store';
 import './filters';

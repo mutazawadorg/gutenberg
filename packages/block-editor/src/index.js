@@ -1,13 +1,11 @@
 /**
  * Internal dependencies
  */
-import { ACCESS_TOKEN } from './experiments';
+import { registerExperimentalAPIs } from './experiments';
 
 /**
  * WordPress dependencies
  */
-import { registerExperimentalAPIs } from '@wordpress/experiments';
-
 import {
 	getBorderClassesAndStyles as __experimentalGetBorderClassesAndStyles,
 	useBorderProps as __experimentalUseBorderProps,
@@ -30,7 +28,7 @@ export {
 };
 
 // This is what this PR is proposing instead:
-registerExperimentalAPIs( ACCESS_TOKEN, {
+registerExperimentalAPIs( {
 	__experimentalGetBorderClassesAndStyles,
 	__experimentalUseBorderProps,
 	__experimentalGetColorClassesAndStyles,

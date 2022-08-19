@@ -11,17 +11,17 @@
 /**
  * WordPress dependencies
  */
-import {
-	registerAccessToken,
-	registerExperimentalAPIs,
-	getExperimentalAPIs
-} from '@wordpress/experiments';
+import { __dangerousOptInToUnstableAPIsOnlyForCoreModules } from '@wordpress/experiments';
 
-const ACCESS_TOKEN = {
-	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
-};
-registerAccessToken( ACCESS_TOKEN, '@wordpress/blocks' );
+const { registerExperimentalAPIs, getExperimentalAPIs } =
+	__dangerousOptInToUnstableAPIsOnlyForCoreModules(
+		'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.',
+		'@wordpress/blocks'
+	);
 
+/**
+ * Internal dependencies
+ */
 import { store } from './store';
 export { store };
 export * from './api';
@@ -29,15 +29,17 @@ export * from './deprecated';
 
 import { __experimentalReapplyBlockTypeFilters } from './store/actions';
 import {
+	// eslint-disable-next-line camelcase
 	unstable__bootstrapServerSideBlockDefinitions,
 	__unstableGetInnerBlocksProps,
 } from './api';
 
 const { __experimentalPrivateDispatch } =
-	getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/data' );
+	getExperimentalAPIs( '@wordpress/data' );
 
-registerExperimentalAPIs( ACCESS_TOKEN, {
+registerExperimentalAPIs( {
 	__unstableGetInnerBlocksProps,
+	// eslint-disable-next-line camelcase
 	unstable__bootstrapServerSideBlockDefinitions,
 
 	__experimentalReapplyBlockTypeFilters: () => {

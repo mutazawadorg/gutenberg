@@ -9,51 +9,50 @@ const CORE_MODULES_USING_EXPERIMENTS = [
 	'@wordpress/edit-widgets',
 ];
 
-const accessTokens = [];
 const registeredExperiments = {};
+const requiredConsent =
+	'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.';
 
-export const registerAccessToken = ( accessToken, packageName ) => {
-	if ( ! CORE_MODULES_USING_EXPERIMENTS.includes( packageName ) ) {
+export const __dangerousOptInToUnstableAPIsOnlyForCoreModules = (
+	consent,
+	moduleName
+) => {
+	if ( ! CORE_MODULES_USING_EXPERIMENTS.includes( moduleName ) ) {
 		throw new Error(
-			`Cannot register non-gutenberg package ${ packageName }.`
+			`You tried to opt-in to unstable APIs as a module "${ moduleName }". ` +
+				'This feature is only for JavaScript modules shipped with WordPress core. ' +
+				'Please do not use it in plugins and themes as the unstable APIs will removed ' +
+				'without a warning. If you ignore this error and depend on unstable features, ' +
+				'your product will inevitably break on the next WordPress release.'
 		);
 	}
-	if ( packageName in registeredExperiments ) {
-		throw new Error( `Package ${ packageName } is already registered.` );
+	if ( moduleName in registeredExperiments ) {
+		throw new Error( `Module ${ moduleName } is already registered.` );
 	}
-	if (
-		! accessToken.i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed
-	) {
+	if ( consent !== requiredConsent ) {
 		throw new Error(
-			`You need to confirm you know the consequences of using the experimental APIs.`
+			`You tried to opt-in to unstable APIs without confirming you know the consequences. ` +
+				'This feature is only for JavaScript modules shipped with WordPress core. ' +
+				'Please do not use it in plugins and themes as the unstable APIs will removed ' +
+				'without a warning. If you ignore this error and depend on unstable features, ' +
+				'your product will inevitably break on the next WordPress release.'
 		);
 	}
-	accessTokens.push( accessToken );
-	registeredExperiments[ packageName ] = { experiments: {}, accessToken };
-}
-
-export const registerExperimentalAPIs = ( accessToken, experiments ) => {
-	const registeredEntry = Object.entries( registeredExperiments ).find(
-		( [ , details ] ) => details.accessToken === accessToken
-	);
-	if ( ! registeredEntry ) {
-		throw new Error( `Invalid access token.` );
-	}
-	const packageName = registeredEntry[ 0 ];
-	registeredExperiments[ packageName ].experiments = {
-		...registeredExperiments[ packageName ].experiments,
-		...experiments,
+	registeredExperiments[ moduleName ] = {};
+	return {
+		registerExperimentalAPIs: ( experiments ) => {
+			registeredExperiments[ moduleName ] = {
+				...registeredExperiments[ moduleName ],
+				...experiments,
+			};
+		},
+		getExperimentalAPIs: ( targetModuleName ) => {
+			if ( ! ( targetModuleName in registeredExperiments ) ) {
+				throw new Error(
+					`Module ${ targetModuleName } is not registered yet.`
+				);
+			}
+			return registeredExperiments[ targetModuleName ];
+		},
 	};
-}
-
-export const getExperimentalAPIs = ( accessToken, packageName ) => {
-	if ( ! ( packageName in registeredExperiments ) ) {
-		throw new Error( `Module ${ packageName } is not registered yet.` );
-	}
-	if ( ! accessTokens.includes( accessToken ) ) {
-		throw new Error(
-			`The access token passed to get experiments from the package ${ packageName } is not registered.`
-		);
-	}
-	return registeredExperiments[ packageName ].experiments;
-}
+};

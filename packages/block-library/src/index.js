@@ -8,15 +8,7 @@ import {
 	setUnregisteredTypeHandlerName,
 	setGroupingBlockName,
 } from '@wordpress/blocks';
-import {
-	registerAccessToken,
-	registerExperimentalAPIs
-} from '@wordpress/experiments';
-
-const ACCESS_TOKEN = {
-	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
-};
-registerAccessToken( ACCESS_TOKEN, '@wordpress/block-library' );
+import { __dangerousOptInToUnstableAPIsOnlyForCoreModules } from '@wordpress/experiments';
 
 /**
  * Internal dependencies
@@ -316,7 +308,13 @@ export const __experimentalRegisterExperimentalCoreBlocks = process.env
 	  }
 	: undefined;
 
-registerExperimentalAPIs( ACCESS_TOKEN, {
+const { registerExperimentalAPIs } =
+	__dangerousOptInToUnstableAPIsOnlyForCoreModules(
+		'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.',
+		'@wordpress/block-library'
+	);
+
+registerExperimentalAPIs( {
 	__experimentalGetCoreBlocks,
 	__experimentalRegisterExperimentalCoreBlocks,
 } );

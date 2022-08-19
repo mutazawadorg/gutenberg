@@ -27,7 +27,6 @@ import {
 	__unstablePresetDuotoneFilter as PresetDuotoneFilter,
 	store as blockEditorStore,
 } from '@wordpress/block-editor';
-import { getExperimentalAPIs } from '@wordpress/experiments';
 
 /**
  * Internal dependencies
@@ -35,10 +34,9 @@ import { getExperimentalAPIs } from '@wordpress/experiments';
 import { PRESET_METADATA, ROOT_BLOCK_SELECTOR, scopeSelector } from './utils';
 import { GlobalStylesContext } from './context';
 import { useSetting } from './hooks';
-import { ACCESS_TOKEN } from '../../experiments';
+import { getExperimentalAPIs } from '../../experiments';
 
 const getGapCSSValue = getExperimentalAPIs(
-	ACCESS_TOKEN,
 	'@wordpress/block-editor'
 ).__experimentalGetGapCSSValue;
 

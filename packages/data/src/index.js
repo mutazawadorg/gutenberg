@@ -6,15 +6,13 @@ import combineReducers from 'turbo-combine-reducers';
 /**
  * WordPress dependencies
  */
-import {
-	registerAccessToken,
-	registerExperimentalAPIs
-} from '@wordpress/experiments';
+import { __dangerousOptInToUnstableAPIsOnlyForCoreModules } from '@wordpress/experiments';
 
-const ACCESS_TOKEN = {
-	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
-};
-registerAccessToken( ACCESS_TOKEN, '@wordpress/data' );
+const { registerExperimentalAPIs } =
+	__dangerousOptInToUnstableAPIsOnlyForCoreModules(
+		'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.',
+		'@wordpress/data'
+	);
 
 /**
  * Internal dependencies
@@ -249,7 +247,7 @@ function __experimentalPrivateDispatch( { name }, actionThunk ) {
 	return defaultRegistry.stores[ name ].store.dispatch( actionThunk );
 }
 
-registerExperimentalAPIs( ACCESS_TOKEN, {
+registerExperimentalAPIs( {
 	__experimentalPrivateSelector,
 	__experimentalPrivateDispatch,
 } );

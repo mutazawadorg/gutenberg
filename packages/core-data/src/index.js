@@ -2,15 +2,7 @@
  * WordPress dependencies
  */
 import { createReduxStore, register } from '@wordpress/data';
-import {
-	registerAccessToken,
-	registerExperimentalAPIs,
-} from '@wordpress/experiments';
-
-const ACCESS_TOKEN = {
-	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
-};
-registerAccessToken( ACCESS_TOKEN, '@wordpress/core-data' );
+import { __dangerousOptInToUnstableAPIsOnlyForCoreModules } from '@wordpress/experiments';
 
 /**
  * Internal dependencies
@@ -86,7 +78,14 @@ export * from './entity-types';
 export * from './fetch';
 export * from './hooks';
 
-import { __experimentalFetchLinkSuggestions } from "./fetch";
-registerExperimentalAPIs( ACCESS_TOKEN, {
+import { __experimentalFetchLinkSuggestions } from './fetch';
+
+const { registerExperimentalAPIs } =
+	__dangerousOptInToUnstableAPIsOnlyForCoreModules(
+		'I know using unstable features means my plugin or theme will inevitably break on the next WordPress release.',
+		'@wordpress/core-data'
+	);
+
+registerExperimentalAPIs( {
 	__experimentalFetchLinkSuggestions,
 } );
