@@ -27,7 +27,13 @@ export const __dangerousOptInToUnstableAPIsOnlyForCoreModules = (
 		);
 	}
 	if ( moduleName in registeredExperiments ) {
-		throw new Error( `Module ${ moduleName } is already registered.` );
+		throw new Error(
+			`You tried to opt-in to unstable APIs as a module "${ moduleName }" which is already registered. ` +
+				'This feature is only for JavaScript modules shipped with WordPress core. ' +
+				'Please do not use it in plugins and themes as the unstable APIs will removed ' +
+				'without a warning. If you ignore this error and depend on unstable features, ' +
+				'your product will inevitably break on the next WordPress release.'
+		);
 	}
 	if ( consent !== requiredConsent ) {
 		throw new Error(
