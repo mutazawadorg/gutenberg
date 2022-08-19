@@ -277,6 +277,7 @@ export function getStylesDeclarations(
 		const cssProperty = rule.key.startsWith( '--' )
 			? rule.key
 			: kebabCase( rule.key );
+
 		let ruleValue = rule.value;
 		if ( typeof ruleValue !== 'string' && ruleValue?.ref ) {
 			const refPath = ruleValue.ref.split( '.' );
@@ -287,7 +288,8 @@ export function getStylesDeclarations(
 				return;
 			}
 		}
-		output.push( `${ cssProperty }: ${ compileStyleValue( ruleValue ) }` );
+
+		output.push( `${ cssProperty }: ${ ruleValue }` );
 	} );
 
 	return output;
@@ -642,14 +644,13 @@ export const toStyles = (
 			if ( duotoneSelector ) {
 				const duotoneDeclarations =
 					getStylesDeclarations( duotoneStyles );
-				if ( duotoneDeclarations.length === 0 ) {
-					return;
+				if ( duotoneDeclarations.length > 0 ) {
+					ruleset =
+						ruleset +
+						`${ duotoneSelector }{${ duotoneDeclarations.join(
+							';'
+						) };}`;
 				}
-				ruleset =
-					ruleset +
-					`${ duotoneSelector }{${ duotoneDeclarations.join(
-						';'
-					) };}`;
 			}
 
 			// Process blockGap and layout styles.
