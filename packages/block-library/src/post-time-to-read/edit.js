@@ -15,17 +15,14 @@ import {
 } from '@wordpress/block-editor';
 import { createBlock, getDefaultBlockName } from '@wordpress/blocks';
 import { store as editorStore } from '@wordpress/editor';
-// eslint-disable-next-line no-unused-vars
+import { createInterpolateElement } from '@wordpress/element';
 import { _x, _n, __, sprintf } from '@wordpress/i18n';
 import { count as wordCount } from '@wordpress/wordcount';
-import { createInterpolateElement } from '@wordpress/element';
 
 /**
  * Average reading rate - based on average taken from
  * https://irisreading.com/average-reading-speed-in-various-languages/
  * (Characters/minute used for Chinese rather than words).
- *
- * @type {number} A rough estimate of the average reading rate across multiple languages.
  */
 const AVERAGE_READING_RATE = 189;
 
@@ -56,6 +53,7 @@ function PostTimeToReadEdit( {
 	 * Do not translate into your own language.
 	 */
 	const wordCountType = _x( 'words', 'Word count type. Do not translate!' );
+
 	// eslint-disable-next-line no-unused-vars
 	const minutesToRead = Math.round(
 		wordCount( content, wordCountType ) / AVERAGE_READING_RATE
