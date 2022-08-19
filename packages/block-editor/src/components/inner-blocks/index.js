@@ -10,16 +10,14 @@ import { useViewportMatch, useMergeRefs } from '@wordpress/compose';
 import { forwardRef } from '@wordpress/element';
 import { useSelect } from '@wordpress/data';
 import { getBlockType, store as blocksStore } from '@wordpress/blocks';
-import {
-	getExperimentalAPIs
-} from '@wordpress/experiments';
+import { getExperimentalAPIs } from '@wordpress/experiments';
 
 /**
  * Internal dependencies
  */
 import { ACCESS_TOKEN } from '../../experiments';
 const { __unstableGetInnerBlocksProps: getInnerBlocksProps } =
-	getExperimentalAPIs(ACCESS_TOKEN,  '@wordpress/blocks' );
+	getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/blocks' );
 
 import ButtonBlockAppender from './button-block-appender';
 import DefaultBlockAppender from './default-block-appender';

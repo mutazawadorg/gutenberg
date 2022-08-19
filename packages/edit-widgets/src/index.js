@@ -42,6 +42,7 @@ const {
 
 const {
 	__experimentalReapplyBlockTypeFilters,
+	// eslint-disable-next-line camelcase
 	unstable__bootstrapServerSideBlockDefinitions,
 } = getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/blocks' );
 
