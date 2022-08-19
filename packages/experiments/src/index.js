@@ -1,28 +1,12 @@
-/*
-Object.entries(window.wp)
-    .map(([name, module])=>{
-        const experiments = [];
-        for(const key in module) {
-            if(key.startsWith("__experimental")) {
-                experiments.push(key);
-            }
-        }
-        return [name, experiments];
-    })
-    .filter(([name, module]) => module.length)
- */
 const CORE_MODULES_USING_EXPERIMENTS = [
 	'@wordpress/data',
 	'@wordpress/block-editor',
 	'@wordpress/block-library',
 	'@wordpress/blocks',
-	'@wordpress/components',
 	'@wordpress/core-data',
 	'@wordpress/date',
-	'@wordpress/edit-post',
 	'@wordpress/edit-site',
 	'@wordpress/edit-widgets',
-	'@wordpress/rich-text',
 ];
 
 const accessTokens = [];

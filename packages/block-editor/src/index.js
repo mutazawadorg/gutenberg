@@ -12,6 +12,8 @@ import {
 	getSpacingClassesAndStyles as __experimentalGetSpacingClassesAndStyles,
 	getGapCSSValue as __experimentalGetGapCSSValue,
 } from './hooks';
+
+// This is how __experimental APIs are exposed today:
 export {
 	__experimentalGetBorderClassesAndStyles,
 	__experimentalUseBorderProps,
@@ -21,6 +23,8 @@ export {
 	__experimentalGetSpacingClassesAndStyles,
 	__experimentalGetGapCSSValue,
 };
+
+// This is what this PR is proposing instead:
 registerExperimentalAPIs( {
 	__experimentalGetBorderClassesAndStyles,
 	__experimentalUseBorderProps,
