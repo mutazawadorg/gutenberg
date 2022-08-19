@@ -14,8 +14,9 @@ import {
 } from '@wordpress/block-editor';
 import { store as editorStore } from '@wordpress/editor';
 // eslint-disable-next-line no-unused-vars
-import { __, _x } from '@wordpress/i18n';
+import { _x, _n, __, sprintf } from '@wordpress/i18n';
 import { count as wordCount } from '@wordpress/wordcount';
+import { createInterpolateElement } from '@wordpress/element';
 
 /**
  * Average reading rate - based on average taken from
@@ -45,6 +46,26 @@ function PostTimeToReadEdit( { attributes, setAttributes } ) {
 		wordCount( content, wordCountType ) / AVERAGE_READING_RATE
 	);
 
+	const minutesToReadString =
+		minutesToRead === 0
+			? createInterpolateElement( __( 'Less than a minute' ), {
+					span: <span />,
+			  } )
+			: createInterpolateElement(
+					sprintf(
+						/* translators: %s is the number of minutes the post will take to read. */
+						_n(
+							'<span>%d</span> minute',
+							'<span>%d</span> minutes',
+							minutesToRead
+						),
+						minutesToRead
+					),
+					{
+						span: <span />,
+					}
+			  );
+
 	const blockProps = useBlockProps( {
 		className: classnames( {
 			[ `has-text-align-${ textAlign }` ]: textAlign,
@@ -61,7 +82,7 @@ function PostTimeToReadEdit( { attributes, setAttributes } ) {
 					} }
 				/>
 			</BlockControls>
-			<div { ...blockProps }>Post Time To Read</div>
+			<div { ...blockProps }>{ minutesToReadString }</div>
 		</>
 	);
 }
