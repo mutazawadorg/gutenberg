@@ -22,7 +22,17 @@ function render_block_core_post_time_to_read( $attributes, $content, $block ) {
 
 	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => $align_class_name ) );
 
-	return sprintf( '<div %1$s>%2$s</div>', $wrapper_attributes, 'Post time to read' );
+	$prefix = "<div $wrapper_attributes>";
+	if ( isset( $attributes['prefix'] ) && $attributes['prefix'] ) {
+		$prefix .= '<span class="wp-block-post-time-to-read__prefix">' . $attributes['prefix'] . '</span>';
+	}
+
+	$suffix = '</div>';
+	if ( isset( $attributes['suffix'] ) && $attributes['suffix'] ) {
+		$suffix = '<span class="wp-block-post-time-to-read__suffix">' . $attributes['suffix'] . '</span>' . $suffix;
+	}
+
+	return wp_kses_post( $prefix ) . 'Time To Read' . wp_kses_post( $suffix );
 }
 
 /**

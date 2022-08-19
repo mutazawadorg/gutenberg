@@ -11,7 +11,9 @@ import {
 	AlignmentControl,
 	BlockControls,
 	useBlockProps,
+	RichText,
 } from '@wordpress/block-editor';
+import { createBlock, getDefaultBlockName } from '@wordpress/blocks';
 import { store as editorStore } from '@wordpress/editor';
 // eslint-disable-next-line no-unused-vars
 import { _x, _n, __, sprintf } from '@wordpress/i18n';
@@ -27,8 +29,21 @@ import { createInterpolateElement } from '@wordpress/element';
  */
 const AVERAGE_READING_RATE = 189;
 
-function PostTimeToReadEdit( { attributes, setAttributes } ) {
-	const { textAlign } = attributes;
+// Allowed formats for the prefix and suffix fields.
+const ALLOWED_FORMATS = [
+	'core/bold',
+	'core/italic',
+	'core/strikethrough',
+	'core/text-color',
+];
+
+function PostTimeToReadEdit( {
+	attributes,
+	setAttributes,
+	isSelected,
+	insertBlocksAfter,
+} ) {
+	const { textAlign, prefix, suffix } = attributes;
 
 	const content = useSelect(
 		( select ) => select( editorStore ).getEditedPostAttribute( 'content' ),
@@ -82,7 +97,42 @@ function PostTimeToReadEdit( { attributes, setAttributes } ) {
 					} }
 				/>
 			</BlockControls>
-			<div { ...blockProps }>{ minutesToReadString }</div>
+			<div { ...blockProps }>
+				{ ( isSelected || prefix ) && (
+					<RichText
+						allowedFormats={ ALLOWED_FORMATS }
+						className="wp-block-post-time-to-read__prefix"
+						multiline={ false }
+						aria-label={ __( 'Prefix' ) }
+						placeholder={ __( 'Prefix' ) + ' ' }
+						value={ prefix }
+						onChange={ ( value ) =>
+							setAttributes( { prefix: value } )
+						}
+						tagName="span"
+					/>
+				) }
+				{ minutesToReadString }
+				{ ( isSelected || suffix ) && (
+					<RichText
+						allowedFormats={ ALLOWED_FORMATS }
+						className="wp-block-post-time-to-read__suffix"
+						multiline={ false }
+						aria-label={ __( 'Suffix' ) }
+						placeholder={ ' ' + __( 'Suffix' ) }
+						value={ suffix }
+						onChange={ ( value ) =>
+							setAttributes( { suffix: value } )
+						}
+						tagName="span"
+						__unstableOnSplitAtEnd={ () =>
+							insertBlocksAfter(
+								createBlock( getDefaultBlockName() )
+							)
+						}
+					/>
+				) }
+			</div>
 		</>
 	);
 }
