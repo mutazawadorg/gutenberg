@@ -4,9 +4,21 @@
 import combineReducers from 'turbo-combine-reducers';
 
 /**
+ * WordPress dependencies
+ */
+import {
+	registerAccessToken,
+	registerExperimentalAPIs
+} from '@wordpress/experiments';
+
+const ACCESS_TOKEN = {
+	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
+};
+registerAccessToken( ACCESS_TOKEN, '@wordpress/data' );
+
+/**
  * Internal dependencies
  */
-import { registerExperimentalAPIs } from './experiments';
 import defaultRegistry from './default-registry';
 import * as plugins from './plugins';
 
@@ -237,7 +249,7 @@ function __experimentalPrivateDispatch( { name }, actionThunk ) {
 	return defaultRegistry.stores[ name ].store.dispatch( actionThunk );
 }
 
-registerExperimentalAPIs( {
+registerExperimentalAPIs( ACCESS_TOKEN, {
 	__experimentalPrivateSelector,
 	__experimentalPrivateDispatch,
 } );

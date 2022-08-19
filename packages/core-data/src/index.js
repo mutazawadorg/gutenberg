@@ -2,11 +2,19 @@
  * WordPress dependencies
  */
 import { createReduxStore, register } from '@wordpress/data';
+import {
+	registerAccessToken,
+	registerExperimentalAPIs,
+} from '@wordpress/experiments';
+
+const ACCESS_TOKEN = {
+	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
+};
+registerAccessToken( ACCESS_TOKEN, '@wordpress/core-data' );
 
 /**
  * Internal dependencies
  */
-import './experiments';
 import reducer from './reducer';
 import * as selectors from './selectors';
 import * as actions from './actions';
@@ -78,3 +86,7 @@ export * from './entity-types';
 export * from './fetch';
 export * from './hooks';
 
+import { __experimentalFetchLinkSuggestions } from "./fetch";
+registerExperimentalAPIs( ACCESS_TOKEN, {
+	__experimentalFetchLinkSuggestions,
+} );

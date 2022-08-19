@@ -8,11 +8,19 @@ import {
 	setUnregisteredTypeHandlerName,
 	setGroupingBlockName,
 } from '@wordpress/blocks';
+import {
+	registerAccessToken,
+	registerExperimentalAPIs
+} from '@wordpress/experiments';
+
+const ACCESS_TOKEN = {
+	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
+};
+registerAccessToken( ACCESS_TOKEN, '@wordpress/block-library' );
 
 /**
  * Internal dependencies
  */
-import { registerExperimentalAPIs } from './experiments';
 // When IS_GUTENBERG_PLUGIN is set to false, imports of experimental blocks
 // are transformed by packages/block-library/src/index.js as follows:
 //    import * as experimentalBlock from './experimental-block'
@@ -308,7 +316,7 @@ export const __experimentalRegisterExperimentalCoreBlocks = process.env
 	  }
 	: undefined;
 
-registerExperimentalAPIs( {
+registerExperimentalAPIs( ACCESS_TOKEN, {
 	__experimentalGetCoreBlocks,
 	__experimentalRegisterExperimentalCoreBlocks,
 } );

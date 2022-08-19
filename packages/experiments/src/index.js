@@ -12,7 +12,7 @@ const CORE_MODULES_USING_EXPERIMENTS = [
 const accessTokens = [];
 const registeredExperiments = {};
 
-export function registerAccessToken( accessToken, packageName ) {
+export const registerAccessToken = ( accessToken, packageName ) => {
 	if ( ! CORE_MODULES_USING_EXPERIMENTS.includes( packageName ) ) {
 		throw new Error(
 			`Cannot register non-gutenberg package ${ packageName }.`
@@ -32,7 +32,7 @@ export function registerAccessToken( accessToken, packageName ) {
 	registeredExperiments[ packageName ] = { experiments: {}, accessToken };
 }
 
-export function registerExperimentalAPIs( accessToken, experiments ) {
+export const registerExperimentalAPIs = ( accessToken, experiments ) => {
 	const registeredEntry = Object.entries( registeredExperiments ).find(
 		( [ , details ] ) => details.accessToken === accessToken
 	);
@@ -46,7 +46,7 @@ export function registerExperimentalAPIs( accessToken, experiments ) {
 	};
 }
 
-export function getExperimentalAPIs( accessToken, packageName ) {
+export const getExperimentalAPIs = ( accessToken, packageName ) => {
 	if ( ! ( packageName in registeredExperiments ) ) {
 		throw new Error( `Module ${ packageName } is not registered yet.` );
 	}

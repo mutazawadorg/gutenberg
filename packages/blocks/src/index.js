@@ -9,12 +9,19 @@
 // and then stored as objects in state, from which it is then rendered for editing.
 
 /**
- * Internal dependencies
- */
-import { registerExperimentalAPIs, getExperimentalAPIs } from './experiments';
-/**
  * WordPress dependencies
  */
+import {
+	registerAccessToken,
+	registerExperimentalAPIs,
+	getExperimentalAPIs
+} from '@wordpress/experiments';
+
+const ACCESS_TOKEN = {
+	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
+};
+registerAccessToken( ACCESS_TOKEN, '@wordpress/blocks' );
+
 import { store } from './store';
 export { store };
 export * from './api';
@@ -27,10 +34,12 @@ import {
 } from './api';
 
 const { __experimentalPrivateDispatch } =
-	getExperimentalAPIs( '@wordpress/data' );
-registerExperimentalAPIs( {
+	getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/data' );
+
+registerExperimentalAPIs( ACCESS_TOKEN, {
 	__unstableGetInnerBlocksProps,
 	unstable__bootstrapServerSideBlockDefinitions,
+
 	__experimentalReapplyBlockTypeFilters: () => {
 		__experimentalPrivateDispatch(
 			store,
