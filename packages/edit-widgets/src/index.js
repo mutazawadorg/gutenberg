@@ -14,28 +14,36 @@ import {
 	registerWidgetGroupBlock,
 } from '@wordpress/widgets';
 import { store as preferencesStore } from '@wordpress/preferences';
+import {
+	registerAccessToken,
+	getExperimentalAPIs,
+} from '@wordpress/experiments';
+
+export const ACCESS_TOKEN = {
+	i_realize_my_code_will_break_in_a_few_months_once_the_experimental_apis_are_removed: true,
+};
+registerAccessToken( ACCESS_TOKEN, '@wordpress/edit-widgets' );
 
 /**
  * Internal dependencies
  */
-import { getExperimentalAPIs } from './experiments';
 import {
 	ALLOW_REUSABLE_BLOCKS,
 	ENABLE_EXPERIMENTAL_FSE_BLOCKS,
 } from './constants';
 
 const { __experimentalFetchLinkSuggestions: fetchLinkSuggestions } =
-	getExperimentalAPIs( '@wordpress/core-data' );
+	getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/core-data' );
 
 const {
 	__experimentalGetCoreBlocks,
 	__experimentalRegisterExperimentalCoreBlocks,
-} = getExperimentalAPIs( '@wordpress/block-library' );
+} = getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/block-library' );
 
 const {
 	__experimentalReapplyBlockTypeFilters,
 	unstable__bootstrapServerSideBlockDefinitions,
-} = getExperimentalAPIs( '@wordpress/blocks' );
+} = getExperimentalAPIs( ACCESS_TOKEN, '@wordpress/blocks' );
 
 import './store';
 import './filters';
