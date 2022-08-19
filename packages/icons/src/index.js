@@ -39,6 +39,7 @@ export { default as chevronRight } from './library/chevron-right';
 export { default as chevronRightSmall } from './library/chevron-right-small';
 export { default as chevronUp } from './library/chevron-up';
 export { default as classic } from './library/classic';
+export { default as clock } from './library/clock';
 export { default as close } from './library/close';
 export { default as closeSmall } from './library/close-small';
 export { default as cloudUpload } from './library/cloud-upload';

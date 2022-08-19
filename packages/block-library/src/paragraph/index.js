@@ -7,7 +7,7 @@ import { isEmpty } from 'lodash';
  * WordPress dependencies
  */
 import { __ } from '@wordpress/i18n';
-import { paragraph as icon } from '@wordpress/icons';
+import { clock as icon } from '@wordpress/icons';
 
 /**
  * Internal dependencies
