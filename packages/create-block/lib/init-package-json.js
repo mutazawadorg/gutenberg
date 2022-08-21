@@ -2,7 +2,6 @@
  * External dependencies
  */
 const { command } = require( 'execa' );
-const { isEmpty, omitBy } = require( 'lodash' );
 const npmPackageArg = require( 'npm-package-arg' );
 const { join } = require( 'path' );
 const writePkg = require( 'write-pkg' );
@@ -32,8 +31,8 @@ module.exports = async ( {
 
 	await writePkg(
 		cwd,
-		omitBy(
-			{
+		Object.fromEntries(
+			Object.entries( {
 				name: slug,
 				version,
 				description,
@@ -54,8 +53,7 @@ module.exports = async ( {
 					...( wpEnv && { env: 'wp-env' } ),
 					...customScripts,
 				},
-			},
-			isEmpty
+			} ).filter( ( [ , value ] ) => !! value )
 		)
 	);
 
@@ -76,7 +74,7 @@ module.exports = async ( {
 	}
 
 	if ( wpScripts ) {
-		if ( npmDependencies.length ) {
+		if ( npmDependencies && npmDependencies.length ) {
 			info( '' );
 			info(
 				'Installing npm dependencies. It might take a couple of minutes...'
@@ -99,7 +97,7 @@ module.exports = async ( {
 			}
 		}
 
-		if ( npmDevDependencies.length ) {
+		if ( npmDevDependencies && npmDevDependencies.length ) {
 			info( '' );
 			info(
 				'Installing npm devDependencies. It might take a couple of minutes...'
