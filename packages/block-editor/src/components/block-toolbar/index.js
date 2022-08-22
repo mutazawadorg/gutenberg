@@ -161,7 +161,10 @@ const BlockToolbar = ( { hideDragHandle } ) => {
 				</>
 			) }
 			<BlockEditVisuallyButton clientIds={ blockClientIds } />
-			<BlockSettingsMenu clientIds={ blockClientIds } />
+			<BlockSettingsMenu
+				clientIds={ blockClientIds }
+				clientId={ blockClientId }
+			/>
 		</div>
 	);
 };

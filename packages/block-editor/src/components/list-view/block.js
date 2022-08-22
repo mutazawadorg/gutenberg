@@ -287,6 +287,7 @@ function ListViewBlock( {
 				>
 					{ ( { ref, tabIndex, onFocus } ) => (
 						<BlockSettingsDropdown
+							clientId={ clientId }
 							clientIds={ dropdownClientIds }
 							icon={ moreVertical }
 							label={ settingsAriaLabel }
@@ -298,6 +299,7 @@ function ListViewBlock( {
 							} }
 							disableOpenOnArrowDown
 							__experimentalSelectBlock={ updateSelection }
+							context={ 'list-view' }
 						/>
 					) }
 				</TreeGridCell>

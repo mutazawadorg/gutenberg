@@ -25,7 +25,12 @@ import { store as blockEditorStore } from '../../store';
 
 const { Fill, Slot } = createSlotFill( 'BlockSettingsMenuControls' );
 
-const BlockSettingsMenuControlsSlot = ( { fillProps, clientIds = null } ) => {
+const BlockSettingsMenuControlsSlot = ( {
+	fillProps,
+	clientIds = null,
+	selectedClientId,
+	context,
+} ) => {
 	const { selectedBlocks, selectedClientIds, canRemove } = useSelect(
 		( select ) => {
 			const {
@@ -58,7 +63,15 @@ const BlockSettingsMenuControlsSlot = ( { fillProps, clientIds = null } ) => {
 		( isGroupable || isUngroupable ) && canRemove;
 
 	return (
-		<Slot fillProps={ { ...fillProps, selectedBlocks, selectedClientIds } }>
+		<Slot
+			fillProps={ {
+				...fillProps,
+				selectedBlocks,
+				selectedClientIds,
+				selectedClientId,
+				context,
+			} }
+		>
 			{ ( fills ) => {
 				if (
 					! fills?.length > 0 &&

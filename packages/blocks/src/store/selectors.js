@@ -644,6 +644,28 @@ export function hasBlockSupport( state, nameOrType, feature, defaultSupports ) {
 	return !! getBlockSupport( state, nameOrType, feature, defaultSupports );
 }
 
+export function __experimentalHasBlockMetadataSupport(
+	state,
+	nameOrType,
+	feature,
+	defaultSupports
+) {
+	// Either Boolean or config object.
+	const support = getBlockSupport(
+		state,
+		nameOrType,
+		'__experimentalMetadata',
+		defaultSupports
+	);
+
+	// Check for explicit Boolean (no coercion).
+	if ( support === true ) {
+		return true;
+	}
+
+	return !! support?.[ feature ];
+}
+
 /**
  * Returns true if the block type by the given name or object value matches a
  * search term, or false otherwise.

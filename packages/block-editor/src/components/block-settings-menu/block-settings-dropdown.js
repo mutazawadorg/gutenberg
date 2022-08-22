@@ -48,9 +48,11 @@ function CopyMenuItem( { blocks, onCopy } ) {
 }
 
 export function BlockSettingsDropdown( {
+	clientId,
 	clientIds,
 	__experimentalSelectBlock,
 	children,
+	context,
 	...props
 } ) {
 	const blockClientIds = castArray( clientIds );
@@ -288,7 +290,9 @@ export function BlockSettingsDropdown( {
 							</MenuGroup>
 							<BlockSettingsMenuControls.Slot
 								fillProps={ { onClose } }
+								selectedClientId={ clientId }
 								clientIds={ clientIds }
+								context={ context }
 							/>
 							{ typeof children === 'function'
 								? children( { onClose } )

@@ -577,6 +577,18 @@ export function getBlockSupport( nameOrType, feature, defaultSupports ) {
 	);
 }
 
+export function __experimentalHasBlockMetadataSupport(
+	nameOrType,
+	feature,
+	defaultSupports
+) {
+	return select( blocksStore ).__experimentalHasBlockMetadataSupport(
+		nameOrType,
+		feature,
+		defaultSupports
+	);
+}
+
 /**
  * Returns true if the block defines support for a feature, or false otherwise.
  *
