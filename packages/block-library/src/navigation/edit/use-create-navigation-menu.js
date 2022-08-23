@@ -27,7 +27,7 @@ export default function useCreateNavigationMenu( clientId ) {
 	// This callback uses data from the two placeholder steps and only creates
 	// a new navigation menu when the user completes the final step.
 	const create = useCallback(
-		async ( title = null, blocks = [] ) => {
+		async ( title = null, blocks = [], slug = '' ) => {
 			// Guard against creating Navigations without a title.
 			// Note you can pass no title, but if one is passed it must be
 			// a string otherwise the title may end up being empty.
@@ -57,14 +57,18 @@ export default function useCreateNavigationMenu( clientId ) {
 					);
 				} );
 			}
+
 			const record = {
 				title,
+				slug,
 				content: serialize( blocks ),
 				status: 'publish',
 			};
 
 			// Return affords ability to await on this function directly
-			return saveEntityRecord( 'postType', 'wp_navigation', record )
+			return saveEntityRecord( 'postType', 'wp_navigation', record, {
+				forceCreate: true,
+			} )
 				.then( ( response ) => {
 					setValue( response );
 					setStatus( CREATE_NAVIGATION_MENU_SUCCESS );

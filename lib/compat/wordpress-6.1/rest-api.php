@@ -93,3 +93,36 @@ function gutenberg_register_has_archive_on_post_types_endpoint() {
 	);
 }
 add_action( 'rest_api_init', 'gutenberg_register_has_archive_on_post_types_endpoint' );
+
+/**
+ * Use custom REST API Controller for Navigation Posts
+ *
+ * @param array $args the post type arguments.
+ * @return array the filtered post type arguments with the new REST Controller set.
+ */
+function gutenberg_update_navigation_rest_controller( $args, $post_type ) {
+	if ( in_array( $post_type, array( 'wp_navigation' ), true ) ) {
+		// Original set in
+		// https://github.com/WordPress/wordpress-develop/blob/6cbed78c94b9d8c6a9b4c8b472b88ee0cd56528c/src/wp-includes/post.php#L528.
+		$args['rest_controller_class'] = 'Gutenberg_REST_Navigation_Controller';
+	}
+	return $args;
+}
+add_filter( 'register_post_type_args', 'gutenberg_update_navigation_rest_controller', 10, 2 );
+
+
+/**
+ * Modify `id` in post schema for `wp_navigation` posts (only) to conform
+ * to string-based slug identifier.
+ *
+ * @param array $schema the post schema data.
+ * @return array the filtered post schema data.
+ */
+function gutenberg_update_navigation_rest_schema( $schema ) {
+
+	$schema['properties']['id']['type']        = 'string';
+	$schema['properties']['id']['description'] = __( 'The slug identifier for a Navigation', 'gutenberg' );
+
+	return $schema;
+}
+add_filter( 'rest_wp_navigation_item_schema', 'gutenberg_update_navigation_rest_schema', 10, 1 );
