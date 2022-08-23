@@ -127,7 +127,12 @@ function Navigation( {
 				}
 			);
 
-			result = result.join( '-' ).trim();
+			// Inclusion of this hardcoded string encodes the template part hierarchy
+			// directly into the generated slug. This may be used later to retrieve
+			// the template part hierarchy from the slug.
+			const TEMPLATE_PART_BOUNDARY_DELINEATOR = '-wptp-';
+
+			result = result.join( TEMPLATE_PART_BOUNDARY_DELINEATOR ).trim();
 
 			return result;
 		},
@@ -812,7 +817,13 @@ function Navigation( {
 							setShouldFocusNavigationSelector( true );
 						}
 					} }
-					onCreateEmpty={ () => createNavigationMenu( '', [] ) }
+					onCreateEmpty={ () =>
+						createNavigationMenu(
+							'',
+							[],
+							generatedTemplatePartHierarchySlug
+						)
+					}
 				/>
 			</TagName>
 		);
@@ -845,7 +856,11 @@ function Navigation( {
 									}
 								} }
 								onCreateNew={ () =>
-									createNavigationMenu( '', [] )
+									createNavigationMenu(
+										'',
+										[],
+										generatedTemplatePartHierarchySlug
+									)
 								}
 								/* translators: %s: The name of a menu. */
 								actionLabel={ __( "Switch to '%s'" ) }
