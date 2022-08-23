@@ -32,7 +32,7 @@ export const __dangerousOptInToUnstableAPIsOnlyForCoreModules = (
 				'This feature is only for JavaScript modules shipped with WordPress core. ' +
 				'Please do not use it in plugins and themes as the unstable APIs will be removed ' +
 				'without a warning. If you ignore this error and depend on unstable features, ' +
-				'your product will inevitably break on the next WordPress release.'
+				'your product will inevitably break on one of the next WordPress releases.'
 		);
 	}
 	if ( consent !== requiredConsent ) {
