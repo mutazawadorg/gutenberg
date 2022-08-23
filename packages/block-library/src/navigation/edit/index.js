@@ -23,7 +23,7 @@ import {
 } from '@wordpress/block-editor';
 import { EntityProvider } from '@wordpress/core-data';
 
-import { useDispatch } from '@wordpress/data';
+import { useDispatch, useSelect } from '@wordpress/data';
 import {
 	PanelBody,
 	ToggleControl,
@@ -96,12 +96,43 @@ function Navigation( {
 
 	const ref = attributes.ref;
 
-	const setRef = ( postId ) => {
-		setAttributes( { ref: postId } );
+	const setRef = ( postSlug ) => {
+		setAttributes( { ref: postSlug } );
 	};
 
 	const recursionId = `navigationMenu/${ ref }`;
 	const hasAlreadyRendered = useHasRecursion( recursionId );
+
+	const generatedTemplatePartHierarchySlug = useSelect(
+		( select ) => {
+			// Use the lack of a clientId as an opportunity to bypass the rest
+			// of this hook.
+			if ( ! clientId ) {
+				return;
+			}
+
+			const { getBlock, getBlockParentsByBlockName } =
+				select( blockEditorStore );
+
+			const withAscendingResults = true;
+			const parentTemplatePartClientIds = getBlockParentsByBlockName(
+				clientId,
+				'core/template-part',
+				withAscendingResults
+			);
+
+			let result = parentTemplatePartClientIds.map(
+				( templatePartClientId ) => {
+					return getBlock( templatePartClientId )?.attributes?.slug;
+				}
+			);
+
+			result = result.join( '-' ).trim();
+
+			return result;
+		},
+		[ clientId ]
+	);
 
 	// Preload classic menus, so that they don't suddenly pop-in when viewing
 	// the Select Menu dropdown.
@@ -142,7 +173,7 @@ function Navigation( {
 		}
 
 		if ( createNavigationMenuIsSuccess ) {
-			setRef( createNavigationMenuPost.id );
+			setRef( createNavigationMenuPost.slug );
 			selectBlock( clientId );
 
 			showNavigationMenuStatusNotice(
@@ -236,7 +267,7 @@ function Navigation( {
 		 *  nor to be undoable, hence why it is marked as non persistent
 		 */
 		__unstableMarkNextChangeAsNotPersistent();
-		setRef( navigationMenus[ 0 ].id );
+		setRef( navigationMenus[ 0 ].slug );
 	}, [ navigationMenus ] );
 
 	const navRef = useRef();
@@ -332,8 +363,8 @@ function Navigation( {
 	] = useState();
 	const [ detectedOverlayColor, setDetectedOverlayColor ] = useState();
 
-	const handleUpdateMenu = ( menuId ) => {
-		setRef( menuId );
+	const handleUpdateMenu = ( menuRef ) => {
+		setRef( menuRef );
 		selectBlock( clientId );
 	};
 
@@ -612,8 +643,8 @@ function Navigation( {
 							ref={ null }
 							currentMenuId={ null }
 							clientId={ clientId }
-							onSelectNavigationMenu={ ( menuId ) => {
-								handleUpdateMenu( menuId );
+							onSelectNavigationMenu={ ( menuRef ) => {
+								handleUpdateMenu( menuRef );
 								setShouldFocusNavigationSelector( true );
 							} }
 							onSelectClassicMenu={ async ( classicMenu ) => {
@@ -622,11 +653,17 @@ function Navigation( {
 									classicMenu.name
 								);
 								if ( navMenu ) {
-									handleUpdateMenu( navMenu.id );
+									handleUpdateMenu( navMenu.slug );
 									setShouldFocusNavigationSelector( true );
 								}
 							} }
-							onCreateNew={ () => createNavigationMenu( '', [] ) }
+							onCreateNew={ () =>
+								createNavigationMenu(
+									'',
+									[],
+									generatedTemplatePartHierarchySlug
+								)
+							}
 							/* translators: %s: The name of a menu. */
 							actionLabel={ __( "Switch to '%s'" ) }
 							showManageActions
@@ -655,7 +692,7 @@ function Navigation( {
 							// Set some state used as a guard to prevent the creation of multiple posts.
 							setHasSavedUnsavedInnerBlocks( true );
 							// Switch to using the wp_navigation entity.
-							setRef( post.id );
+							setRef( post.slug );
 
 							showNavigationMenuStatusNotice(
 								__( `New Navigation Menu created.` )
@@ -678,8 +715,8 @@ function Navigation( {
 							ref={ navigationSelectorRef }
 							currentMenuId={ ref }
 							clientId={ clientId }
-							onSelectNavigationMenu={ ( menuId ) => {
-								handleUpdateMenu( menuId );
+							onSelectNavigationMenu={ ( menuRef ) => {
+								handleUpdateMenu( menuRef );
 								setShouldFocusNavigationSelector( true );
 							} }
 							onSelectClassicMenu={ async ( classicMenu ) => {
@@ -688,7 +725,7 @@ function Navigation( {
 									classicMenu.name
 								);
 								if ( navMenu ) {
-									handleUpdateMenu( navMenu.id );
+									handleUpdateMenu( navMenu.slug );
 									setShouldFocusNavigationSelector( true );
 								}
 							} }
@@ -749,8 +786,8 @@ function Navigation( {
 					isResolvingCanUserCreateNavigationMenu={
 						isResolvingCanUserCreateNavigationMenu
 					}
-					onSelectNavigationMenu={ ( menuId ) => {
-						handleUpdateMenu( menuId );
+					onSelectNavigationMenu={ ( menuRef ) => {
+						handleUpdateMenu( menuRef );
 						setShouldFocusNavigationSelector( true );
 					} }
 					onSelectClassicMenu={ async ( classicMenu ) => {
@@ -759,7 +796,7 @@ function Navigation( {
 							classicMenu.name
 						);
 						if ( navMenu ) {
-							handleUpdateMenu( navMenu.id );
+							handleUpdateMenu( navMenu.slug );
 							setShouldFocusNavigationSelector( true );
 						}
 					} }
@@ -779,8 +816,8 @@ function Navigation( {
 								ref={ navigationSelectorRef }
 								currentMenuId={ ref }
 								clientId={ clientId }
-								onSelectNavigationMenu={ ( menuId ) => {
-									handleUpdateMenu( menuId );
+								onSelectNavigationMenu={ ( menuRef ) => {
+									handleUpdateMenu( menuRef );
 									setShouldFocusNavigationSelector( true );
 								} }
 								onSelectClassicMenu={ async ( classicMenu ) => {
@@ -789,7 +826,7 @@ function Navigation( {
 										classicMenu.name
 									);
 									if ( navMenu ) {
-										handleUpdateMenu( navMenu.id );
+										handleUpdateMenu( navMenu.slug );
 										setShouldFocusNavigationSelector(
 											true
 										);
