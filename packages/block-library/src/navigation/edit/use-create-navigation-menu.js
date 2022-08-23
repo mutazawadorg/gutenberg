@@ -78,11 +78,23 @@ export default function useCreateNavigationMenu( clientId ) {
 			// saveEntityRecord's inbuilt "optimisations" around PUT vs POST and always issue a POST request.
 			const forceCreateMethod = 'POST';
 
+			// By default saveEntityRecord will apply an optimisation and assume that if the
+			// recordKey is included in the record being saved then this should be a "update"
+			// rather than a "save" request. This function strips the recordKey that is appended to
+			// request path to ensure the request can be routed to the POST handler on the REST API
+			// endpoint. Failured to do this results in a 404.
+			const stripRecordKeyFromRequestPath = ( path, recordKey ) =>
+				path.replace( recordKey, '' );
+
 			// Return affords ability to await on this function directly
 			return saveEntityRecord( 'postType', 'wp_navigation', record, {
 				__unstableFetch: ( params ) => {
 					return apiFetch( {
 						...params,
+						path: stripRecordKeyFromRequestPath(
+							params.path,
+							slug
+						),
 						method: forceCreateMethod,
 					} );
 				},
