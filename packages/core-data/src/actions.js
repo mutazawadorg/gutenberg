@@ -431,7 +431,6 @@ export function __unstableCreateUndoLevel() {
  *                                                Must return a promise.
  * @param {boolean}  [options.throwOnError=false] If false, this action suppresses all
  *                                                the exceptions. Defaults to false.
- * @param {boolean}  [options.forceCreate=false]  Whether or not to force a POST request.
  */
 export const saveEntityRecord =
 	(
@@ -442,7 +441,6 @@ export const saveEntityRecord =
 			isAutosave = false,
 			__unstableFetch = apiFetch,
 			throwOnError = false,
-			forceCreate = false,
 		} = {}
 	) =>
 	async ( { select, resolveSelect, dispatch } ) => {
@@ -493,7 +491,7 @@ export const saveEntityRecord =
 			let hasError = false;
 			try {
 				const path = `${ entityConfig.baseURL }${
-					recordId && ! forceCreate ? '/' + recordId : ''
+					recordId ? '/' + recordId : ''
 				}`;
 				const persistedRecord = select.getRawEntityRecord(
 					kind,
@@ -609,7 +607,7 @@ export const saveEntityRecord =
 					}
 					updatedRecord = await __unstableFetch( {
 						path,
-						method: recordId && ! forceCreate ? 'PUT' : 'POST',
+						method: recordId ? 'PUT' : 'POST',
 						data: edits,
 					} );
 					dispatch.receiveEntityRecords(
