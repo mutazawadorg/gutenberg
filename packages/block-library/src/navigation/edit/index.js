@@ -373,6 +373,9 @@ function Navigation( {
 		selectBlock( clientId );
 	};
 
+	const createEmptyNavigation = () =>
+		void createNavigationMenu( '', [], generatedTemplatePartHierarchySlug );
+
 	useEffect( () => {
 		hideClassicMenuConversionNotice();
 		if ( classicMenuConversionStatus === CLASSIC_MENU_CONVERSION_PENDING ) {
@@ -662,13 +665,7 @@ function Navigation( {
 									setShouldFocusNavigationSelector( true );
 								}
 							} }
-							onCreateNew={ () =>
-								createNavigationMenu(
-									'',
-									[],
-									generatedTemplatePartHierarchySlug
-								)
-							}
+							onCreateNew={ createEmptyNavigation }
 							/* translators: %s: The name of a menu. */
 							actionLabel={ __( "Switch to '%s'" ) }
 							showManageActions
@@ -734,13 +731,7 @@ function Navigation( {
 									setShouldFocusNavigationSelector( true );
 								}
 							} }
-							onCreateNew={ () =>
-								createNavigationMenu(
-									'',
-									[],
-									generatedTemplatePartHierarchySlug
-								)
-							}
+							onCreateNew={ createEmptyNavigation }
 							/* translators: %s: The name of a menu. */
 							actionLabel={ __( "Switch to '%s'" ) }
 							showManageActions
@@ -751,16 +742,7 @@ function Navigation( {
 					{ __(
 						'Navigation menu has been deleted or is unavailable. '
 					) }
-					<Button
-						onClick={ () =>
-							createNavigationMenu(
-								'',
-								[],
-								generatedTemplatePartHierarchySlug
-							)
-						}
-						variant="link"
-					>
+					<Button onClick={ createEmptyNavigation } variant="link">
 						{ __( 'Create a new menu?' ) }
 					</Button>
 				</Warning>
@@ -817,13 +799,7 @@ function Navigation( {
 							setShouldFocusNavigationSelector( true );
 						}
 					} }
-					onCreateEmpty={ () =>
-						createNavigationMenu(
-							'',
-							[],
-							generatedTemplatePartHierarchySlug
-						)
-					}
+					onCreateEmpty={ createEmptyNavigation }
 				/>
 			</TagName>
 		);
@@ -855,13 +831,7 @@ function Navigation( {
 										);
 									}
 								} }
-								onCreateNew={ () =>
-									createNavigationMenu(
-										'',
-										[],
-										generatedTemplatePartHierarchySlug
-									)
-								}
+								onCreateNew={ createEmptyNavigation }
 								/* translators: %s: The name of a menu. */
 								actionLabel={ __( "Switch to '%s'" ) }
 								showManageActions
