@@ -17,10 +17,7 @@
 			"enum": [ "all", "insert", false ]
 		},
 		"layout": {
-			"type": "object",
-			"default": {
-				"type": "constrained"
-			}
+			"type": "object"
 		}
 	},
 	"supports": {

@@ -10,20 +10,21 @@ const variations = [
 		title: __( 'Group' ),
 		description: __( 'Gather blocks in a layout container.' ),
 		attributes: { layout: { type: 'constrained' } },
-		scope: [ 'transform' ],
+		scope: [ 'block', 'transform' ],
 		isActive: ( blockAttributes ) =>
 			! blockAttributes.layout ||
 			! blockAttributes.layout?.type ||
 			blockAttributes.layout?.type === 'default' ||
 			blockAttributes.layout?.type === 'constrained',
 		icon: group,
+		isDefault: true,
 	},
 	{
 		name: 'group-row',
 		title: _x( 'Row', 'single horizontal line' ),
 		description: __( 'Arrange blocks horizontally.' ),
 		attributes: { layout: { type: 'flex', flexWrap: 'nowrap' } },
-		scope: [ 'inserter', 'transform' ],
+		scope: [ 'block', 'inserter', 'transform' ],
 		isActive: ( blockAttributes ) =>
 			blockAttributes.layout?.type === 'flex' &&
 			( ! blockAttributes.layout?.orientation ||
@@ -35,7 +36,7 @@ const variations = [
 		title: __( 'Stack' ),
 		description: __( 'Arrange blocks vertically.' ),
 		attributes: { layout: { type: 'flex', orientation: 'vertical' } },
-		scope: [ 'inserter', 'transform' ],
+		scope: [ 'block', 'inserter', 'transform' ],
 		isActive: ( blockAttributes ) =>
 			blockAttributes.layout?.type === 'flex' &&
 			blockAttributes.layout?.orientation === 'vertical',
