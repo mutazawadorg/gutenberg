@@ -68,8 +68,8 @@ function BlockPopover(
 			__unstableSlotName={ __unstablePopoverSlot || null }
 			// Observe movement for block animations (especially horizontal).
 			__unstableObserveElement={ selectedElement }
-			__unstableResize={ false }
-			__unstableFlip={ false }
+			resize={ false }
+			flip={ false }
 			__unstableShift
 			{ ...props }
 			className={ classnames(
