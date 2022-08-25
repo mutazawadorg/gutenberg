@@ -95,21 +95,36 @@ function BlockListBlock( {
 	onMerge,
 	toggleSelection,
 } ) {
-	const { themeSupportsLayout, hasContentLockedParent, isContentBlock } =
-		useSelect(
-			( select ) => {
-				const { getSettings, __unstableGetContentLockingParent } =
-					select( blockEditorStore );
-				return {
-					themeSupportsLayout: getSettings().supportsLayout,
-					hasContentLockedParent:
-						!! __unstableGetContentLockingParent( clientId ),
-					isContentBlock:
-						select( blocksStore ).__unstableIsContentBlock( name ),
-				};
-			},
-			[ name, clientId ]
-		);
+	const {
+		themeSupportsLayout,
+		hasContentLockedParent,
+		isContentBlock,
+		isContentLocking,
+		isTemporarilyEditingAsBlocks,
+	} = useSelect(
+		( select ) => {
+			const {
+				getSettings,
+				__unstableGetContentLockingParent,
+				getTemplateLock,
+				__unstableGetTemporarilyEditingAsBlocks,
+			} = select( blockEditorStore );
+			const _hasContentLockedParent =
+				!! __unstableGetContentLockingParent( clientId );
+			return {
+				themeSupportsLayout: getSettings().supportsLayout,
+				isContentBlock:
+					select( blocksStore ).__unstableIsContentBlock( name ),
+				hasContentLockedParent: _hasContentLockedParent,
+				isContentLocking:
+					getTemplateLock( clientId ) === 'noContent' &&
+					! _hasContentLockedParent,
+				isTemporarilyEditingAsBlocks:
+					__unstableGetTemporarilyEditingAsBlocks() === clientId,
+			};
+		},
+		[ name, clientId ]
+	);
 	const { removeBlock } = useDispatch( blockEditorStore );
 	const onRemove = useCallback( () => removeBlock( clientId ), [ clientId ] );
 
@@ -206,8 +221,12 @@ function BlockListBlock( {
 	const value = {
 		clientId,
 		className: classnames(
-			hasContentLockedParent &&
-				( isContentBlock ? 'is-content-block' : 'is-content-locked' ),
+			{
+				'is-content-locked': isContentLocking,
+				'is-content-locked-temporarily-editing-as-blocks':
+					isTemporarilyEditingAsBlocks,
+				'is-content-block': hasContentLockedParent && isContentBlock,
+			},
 			!! wrapperProps?.[ 'data-align' ] &&
 				!! themeSupportsLayout &&
 				`align${ wrapperProps[ 'data-align' ] }`,
