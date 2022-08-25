@@ -249,8 +249,6 @@ function Navigation( {
 
 	const isDraftNavigationMenu = navigationMenu?.status === 'draft';
 
-	useEffect( () => {} );
-
 	const {
 		convert: convertClassicMenu,
 		status: classicMenuConversionStatus,
