@@ -141,9 +141,13 @@ function ListViewBlockSelectButton(
 		}
 	}, [ labelEditingMode ] );
 
+	const isEditingModeActive = supportsBlockNaming && labelEditingMode;
+
+	const Component = isEditingModeActive ? 'div' : Button;
+
 	return (
 		<>
-			<Button
+			<Component
 				className={ classnames(
 					'block-editor-list-view-block-select-button',
 					className,
@@ -181,7 +185,9 @@ function ListViewBlockSelectButton(
 				onDragStart={ onDragStartHandler }
 				onDragEnd={ onDragEnd }
 				draggable={ draggable }
-				href={ `#block-${ clientId }` }
+				href={
+					isEditingModeActive ? undefined : `#block-${ clientId }`
+				}
 				aria-hidden={ true }
 			>
 				<ListViewExpander onClick={ onToggleExpanded } />
@@ -193,7 +199,7 @@ function ListViewBlockSelectButton(
 					spacing={ 1 }
 				>
 					<span className="block-editor-list-view-block-select-button__title">
-						{ supportsBlockNaming && labelEditingMode ? (
+						{ isEditingModeActive ? (
 							<InputControl
 								ref={ inputRef }
 								value={ inputValue }
@@ -256,7 +262,7 @@ function ListViewBlockSelectButton(
 						);
 					} }
 				</BlockSettingsMenuControls>
-			</Button>
+			</Component>
 		</>
 	);
 }
