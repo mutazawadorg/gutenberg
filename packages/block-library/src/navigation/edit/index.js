@@ -21,7 +21,7 @@ import {
 	Warning,
 	__experimentalUseBlockOverlayActive as useBlockOverlayActive,
 } from '@wordpress/block-editor';
-import { EntityProvider } from '@wordpress/core-data';
+import { EntityProvider, store as coreStore } from '@wordpress/core-data';
 
 import { useDispatch } from '@wordpress/data';
 import {
@@ -102,6 +102,7 @@ function Navigation( {
 
 	const recursionId = `navigationMenu/${ ref }`;
 	const hasAlreadyRendered = useHasRecursion( recursionId );
+	const { editEntityRecord } = useDispatch( coreStore );
 
 	// Preload classic menus, so that they don't suddenly pop-in when viewing
 	// the Select Menu dropdown.
@@ -115,6 +116,11 @@ function Navigation( {
 	const [ showClassicMenuConversionNotice, hideClassicMenuConversionNotice ] =
 		useNavigationNotice( {
 			name: 'block-library/core/navigation/classic-menu-conversion',
+		} );
+
+	const [ showMenuAutoPublishDraftNotice, hideMenuAutoPublishDraftNotice ] =
+		useNavigationNotice( {
+			name: 'block-library/core/navigation/auto-publish-draft',
 		} );
 
 	const [
@@ -242,6 +248,8 @@ function Navigation( {
 	const navRef = useRef();
 
 	const isDraftNavigationMenu = navigationMenu?.status === 'draft';
+
+	useEffect( () => {} );
 
 	const {
 		convert: convertClassicMenu,
@@ -454,6 +462,27 @@ function Navigation( {
 		'wp-block-navigation__overlay-menu-preview',
 		{ open: overlayMenuPreview }
 	);
+
+	// Set menu to published if it's a draft on site load in order to make the post dirty.
+	useEffect( async () => {
+		hideMenuAutoPublishDraftNotice();
+		if ( ! isDraftNavigationMenu ) return;
+		try {
+			await editEntityRecord(
+				'postType',
+				'wp_navigation',
+				navigationMenu?.id,
+				{
+					status: 'publish',
+				},
+				{ throwOnError: true }
+			);
+		} catch {
+			showMenuAutoPublishDraftNotice(
+				__( 'Error ocurred while publishing the navigation menu.' )
+			);
+		}
+	}, [ isDraftNavigationMenu, navigationMenu ] );
 
 	const stylingInspectorControls = (
 		<InspectorControls>
