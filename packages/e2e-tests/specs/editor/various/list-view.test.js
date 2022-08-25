@@ -8,6 +8,8 @@ import {
 	openListView,
 	pressKeyWithModifier,
 	pressKeyTimes,
+	transformBlockTo,
+	getListViewBlocks,
 } from '@wordpress/e2e-test-utils';
 
 async function dragAndDrop( draggableElement, targetElement, offsetY ) {
@@ -326,5 +328,32 @@ describe( 'List view', () => {
 			'button[aria-label="Options for Group block"]'
 		);
 		await expect( listViewGroupBlockRight ).toHaveFocus();
+	} );
+
+	it( 'should allow in place block renaming via double click shortcut', async () => {
+		await insertBlock( 'Paragraph' );
+		await page.keyboard.type( 'First Paragraph' );
+
+		// Multiselect via keyboard.
+		await pressKeyWithModifier( 'primary', 'a' );
+		await pressKeyWithModifier( 'primary', 'a' );
+
+		await transformBlockTo( 'Group' );
+
+		// Open list view.
+		await pressKeyWithModifier( 'access', 'o' );
+
+		let groupNode = ( await getListViewBlocks( 'Group' ) )[ 0 ];
+
+		// Double click on node to activate edit mode.
+		await groupNode.click( { clickCount: 2 } );
+
+		// Rename the block.
+		await page.keyboard.type( 'New name for the Group' );
+		await page.keyboard.press( 'Enter' );
+
+		groupNode = (
+			await getListViewBlocks( 'New name for the Group' )
+		 )[ 0 ];
 	} );
 } );
