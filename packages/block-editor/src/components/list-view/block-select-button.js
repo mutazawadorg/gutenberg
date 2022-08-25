@@ -139,9 +139,6 @@ function ListViewBlockSelectButton(
 			// Focus and select all text on entering label editing mode.
 			inputRef?.current?.focus();
 			inputRef?.current?.select();
-		} else {
-			// Focus the current node on leaving editing mode.
-			ref?.current.focus();
 		}
 	}, [ labelEditingMode ] );
 
