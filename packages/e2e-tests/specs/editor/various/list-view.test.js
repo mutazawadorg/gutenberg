@@ -356,4 +356,40 @@ describe( 'List view', () => {
 			await getListViewBlocks( 'New name for the Group' )
 		 )[ 0 ];
 	} );
+
+	it( 'should allow in place block renaming via keyboard', async () => {
+		await insertBlock( 'Paragraph' );
+		await page.keyboard.type( 'First Paragraph' );
+
+		// Multiselect via keyboard.
+		await pressKeyWithModifier( 'primary', 'a' );
+		await pressKeyWithModifier( 'primary', 'a' );
+
+		await transformBlockTo( 'Group' );
+
+		// Open list view.
+		await pressKeyWithModifier( 'access', 'o' );
+
+		// Remove to List view Group node options menu.
+		await page.keyboard.press( 'ArrowRight' );
+		await page.keyboard.press( 'ArrowRight' );
+		await page.keyboard.press( 'Enter' );
+
+		// Move to "Rename" option.
+		await pressKeyTimes( 'ArrowDown', 6 );
+
+		// Select option.
+		await page.keyboard.press( 'Enter' );
+
+		const listViewGroupBlockRight = await page.waitForSelector(
+			'input[value="Group"]'
+		);
+		await expect( listViewGroupBlockRight ).toHaveFocus();
+
+		// Rename the block.
+		await page.keyboard.type( 'New name for the Group' );
+		await page.keyboard.press( 'Enter' );
+
+		await getListViewBlocks( 'New name for the Group' );
+	} );
 } );
