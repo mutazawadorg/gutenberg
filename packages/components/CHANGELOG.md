@@ -6,6 +6,7 @@
 
 -   Refactor `FocalPointPicker` to function component ([#39168](https://github.com/WordPress/gutenberg/pull/39168)).
 -   `Guide`: use `code` instead of `keyCode` for keyboard events ([#43604](https://github.com/WordPress/gutenberg/pull/43604/)).
+-   `NavigableContainer`: use `code` instead of `keyCode` for keyboard events, rewrite tests using RTL and `user-event` ([#43606](https://github.com/WordPress/gutenberg/pull/43606/)).
 
 ## 20.0.0 (2022-08-24)
 
