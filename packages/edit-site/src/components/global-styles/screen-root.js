@@ -16,7 +16,7 @@ import {
 	Flex,
 } from '@wordpress/components';
 import { isRTL, __ } from '@wordpress/i18n';
-import { chevronLeft, chevronRight, reusableBlock } from '@wordpress/icons';
+import { chevronLeft, chevronRight, shuffle } from '@wordpress/icons';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 
@@ -106,7 +106,7 @@ function ScreenRoot() {
 				</FlexItem>
 				<CardFooter>
 					<Button
-						icon={ reusableBlock }
+						icon={ shuffle }
 						label={ __( 'Randomize colors' ) }
 						onClick={ randomizeTheme }
 					/>
