@@ -238,7 +238,12 @@ function ListViewBlockSelectButton(
 				</HStack>
 
 				<BlockSettingsMenuControls>
-					{ ( { selectedClientId, context } ) => {
+					{ ( { selectedClientIds, context } ) => {
+						// Only enabled for single selections.
+						const canRename =
+							selectedClientIds.length === 1 &&
+							clientId === selectedClientIds[ 0 ];
+
 						// This check ensures
 						// - the `BlockSettingsMenuControls` fill
 						// doesn't render multiple times and also that it renders for
@@ -248,7 +253,7 @@ function ListViewBlockSelectButton(
 						if (
 							! supportsBlockNaming ||
 							context !== 'list-view' ||
-							clientId !== selectedClientId
+							! canRename
 						) {
 							return null;
 						}

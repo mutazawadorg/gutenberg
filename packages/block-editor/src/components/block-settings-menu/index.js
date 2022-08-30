@@ -8,13 +8,12 @@ import { ToolbarGroup, ToolbarItem } from '@wordpress/components';
  */
 import BlockSettingsDropdown from './block-settings-dropdown';
 
-export function BlockSettingsMenu( { clientIds, clientId, ...props } ) {
+export function BlockSettingsMenu( { clientIds, ...props } ) {
 	return (
 		<ToolbarGroup>
 			<ToolbarItem>
 				{ ( toggleProps ) => (
 					<BlockSettingsDropdown
-						clientId={ clientId }
 						clientIds={ clientIds }
 						toggleProps={ toggleProps }
 						{ ...props }
