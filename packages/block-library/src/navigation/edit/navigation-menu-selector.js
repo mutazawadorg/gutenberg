@@ -76,6 +76,10 @@ function NavigationMenuSelector(
 		return null;
 	}
 
+	const navigationStorageMap = new Map(
+		JSON.parse( window.localStorage.getItem( 'nav_menus_created' ) )
+	);
+
 	return (
 		<ToolbarDropdownMenu
 			ref={ forwardedRef }
@@ -99,9 +103,22 @@ function NavigationMenuSelector(
 						</MenuGroup>
 					) }
 					{ showClassicMenus && hasClassicMenus && (
-						<MenuGroup label={ __( 'Classic Menus' ) }>
+						<MenuGroup label={ __( 'Import Classic Menus' ) }>
 							{ classicMenus?.map( ( menu ) => {
-								const label = decodeEntities( menu.name );
+								const alreadyImported =
+									navigationStorageMap.get( menu.name ) &&
+									navigationMenus.some(
+										( { title: { raw } } ) =>
+											raw === menu.name
+									);
+								const label = !! alreadyImported
+									? sprintf(
+											/* translators: %s: The name of a menu. */
+											__( '"%s" (already imported)' ),
+											decodeEntities( menu.name )
+									  )
+									: decodeEntities( menu.name );
+
 								return (
 									<MenuItem
 										onClick={ () => {
@@ -113,6 +130,9 @@ function NavigationMenuSelector(
 											createActionLabel,
 											label
 										) }
+										aria-disabled={ !! alreadyImported }
+										disabled={ !! alreadyImported }
+										n
 									>
 										{ label }
 									</MenuItem>
