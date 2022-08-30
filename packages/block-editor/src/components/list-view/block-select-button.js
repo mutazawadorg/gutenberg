@@ -86,6 +86,10 @@ function ListViewBlockSelectButton(
 		}
 
 		setLabelEditingMode( value );
+
+		// Reset the input's local state to avoid
+		// stale values.
+		setInputValue( blockTitle );
 	};
 
 	// The `href` attribute triggers the browser's native HTML drag operations.
