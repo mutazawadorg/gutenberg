@@ -6,6 +6,11 @@
 
 -   `Popover`: enable auto-updating every animation frame ([#43617](https://github.com/WordPress/gutenberg/pull/43617)).
 
+### Enhancements
+
+-   `CardHeader`, `CardBody`, `CardFooter`: Tweak `isShady` background colors to be consistent with the grays in `@wordpress/base-styles` ([#43719](https://github.com/WordPress/gutenberg/pull/43719)).
+-   `InputControl`, `SelectControl`: Tweak `disabled` colors to be consistent with the grays in `@wordpress/base-styles` ([#43719](https://github.com/WordPress/gutenberg/pull/43719)).
+
 ### Internal
 
 -   Remove unused `normalizeArrowKey` utility function ([#43640](https://github.com/WordPress/gutenberg/pull/43640/)).
