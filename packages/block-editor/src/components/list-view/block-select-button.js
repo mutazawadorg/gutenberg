@@ -190,7 +190,7 @@ function ListViewBlockSelectButton(
 				href={
 					isEditingModeActive ? undefined : `#block-${ clientId }`
 				}
-				aria-hidden={ true }
+				aria-hidden={ ! isEditingModeActive }
 			>
 				<ListViewExpander onClick={ onToggleExpanded } />
 				<BlockIcon icon={ blockInformation?.icon } showColors />
