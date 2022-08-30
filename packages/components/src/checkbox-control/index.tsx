@@ -48,6 +48,7 @@ export function CheckboxControl(
 	>
 ) {
 	const {
+		__nextHasNoMarginBottom,
 		label,
 		className,
 		heading,
@@ -92,6 +93,7 @@ export function CheckboxControl(
 
 	return (
 		<BaseControl
+			__nextHasNoMarginBottom={ __nextHasNoMarginBottom }
 			label={ heading }
 			id={ id }
 			help={ help }
