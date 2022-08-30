@@ -32,7 +32,6 @@ import { store as blockEditorStore } from '../../store';
 import BlockSettingsMenuControls from '../block-settings-menu-controls';
 
 const SINGLE_CLICK = 1;
-const DOUBLE_CLICK = 2;
 
 function ListViewBlockSelectButton(
 	{
@@ -49,7 +48,6 @@ function ListViewBlockSelectButton(
 	ref
 ) {
 	const { clientId } = block;
-	const clickHandlerTimer = useRef();
 	const inputRef = useRef();
 
 	// Setting managed via `toggleLabelEditingMode` handler.
@@ -163,21 +161,20 @@ function ListViewBlockSelectButton(
 						return;
 					}
 
-					clearTimeout( clickHandlerTimer.current );
-
 					if ( labelEditingMode ) {
-						event.preventDefault();
 						event.stopPropagation();
 						return;
 					}
 
 					if ( event.detail === SINGLE_CLICK ) {
-						clickHandlerTimer.current = setTimeout( () => {
-							onClick( event );
-						}, 200 );
-					} else if ( event.detail === DOUBLE_CLICK ) {
-						toggleLabelEditingMode( true );
+						onClick( event );
 					}
+				} }
+				onDoubleClick={ () => {
+					if ( ! supportsBlockNaming ) {
+						return;
+					}
+					toggleLabelEditingMode( true );
 				} }
 				onKeyDown={ onKeyDownHandler }
 				ref={ ref }
