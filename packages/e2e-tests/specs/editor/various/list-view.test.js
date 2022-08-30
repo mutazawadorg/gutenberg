@@ -355,6 +355,16 @@ describe( 'List view', () => {
 		groupNode = (
 			await getListViewBlocks( 'New name for the Group' )
 		 )[ 0 ];
+
+		// Ideally groupNode could be directly evaluated for its `innerText` but Puppeteer doesn't support this.
+		// If in the future these tests are migrated to Playwright we should implement the ideas from:
+		// https://github.com/WordPress/gutenberg/pull/42605#discussion_r956657757
+		expect(
+			await groupNode.$eval(
+				'.block-editor-list-view-block-select-button__title',
+				( node ) => node.innerText
+			)
+		).toBe( 'New name for the Group' );
 	} );
 
 	it( 'should allow in place block renaming via keyboard', async () => {
@@ -381,15 +391,27 @@ describe( 'List view', () => {
 		// Select option.
 		await page.keyboard.press( 'Enter' );
 
-		const listViewGroupBlockRight = await page.waitForSelector(
+		const listViewGroupBlockInput = await page.waitForSelector(
 			'input[value="Group"]'
 		);
-		await expect( listViewGroupBlockRight ).toHaveFocus();
+		await expect( listViewGroupBlockInput ).toHaveFocus();
 
 		// Rename the block.
 		await page.keyboard.type( 'New name for the Group' );
 		await page.keyboard.press( 'Enter' );
 
-		await getListViewBlocks( 'New name for the Group' );
+		const groupNode = (
+			await getListViewBlocks( 'New name for the Group' )
+		 )[ 0 ];
+
+		// Ideally groupNode could be directly evaluated for its `innerText` but Puppeteer doesn't support this.
+		// If in the future these tests are migrated to Playwright we should implement the ideas from:
+		// https://github.com/WordPress/gutenberg/pull/42605#discussion_r956657757
+		expect(
+			await groupNode.$eval(
+				'.block-editor-list-view-block-select-button__title',
+				( node ) => node.innerText
+			)
+		).toBe( 'New name for the Group' );
 	} );
 } );
