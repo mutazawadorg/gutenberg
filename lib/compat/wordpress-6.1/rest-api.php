@@ -120,9 +120,51 @@ add_filter( 'register_post_type_args', 'gutenberg_update_navigation_rest_control
  */
 function gutenberg_update_navigation_rest_schema( $schema ) {
 
-	$schema['properties']['id']['type']        = 'string';
-	$schema['properties']['id']['description'] = __( 'The slug identifier for a Navigation', 'gutenberg' );
+	$schema['properties']['slug']['type']        = 'string';
+	$schema['properties']['slug']['description'] = __( 'The slug identifier for a Navigation', 'gutenberg' );
 
 	return $schema;
 }
 add_filter( 'rest_wp_navigation_item_schema', 'gutenberg_update_navigation_rest_schema', 10, 1 );
+
+
+function gutenberg_transform_slug_to_post_id( $response, $handler, WP_REST_Request $request ) {
+	// Ignore non-Navigation REST API requests.
+	if( ! str_contains( $request->get_route(), '/wp/v2/navigation' ) )  {
+		return $response;
+	}
+
+	// Get the slug from the request.
+	$slug = $request->get_param('slug');
+
+	// If no slug provided assume ID and continue as normal.
+	if( empty($slug) ) {
+		return $response;
+	}
+
+	$args = array(
+		'name'                   => $slug, // query by slug
+		'post_type'              => 'wp_navigation',
+		'nopaging'               => true,
+		'posts_per_page'         => '1',
+		'update_post_term_cache' => false,
+		'no_found_rows'          => false,
+	);
+
+	// Query for the Navigation Post by slug (post_name).
+	$query = new WP_Query( $args );
+
+	if ( empty( $query ) || empty( $query->post->ID ) ) {
+		return new WP_Error(
+			'rest_post_not_found',
+			__( 'No navigation found.' ),
+			array( 'status' => 404 )
+		);
+	}
+
+	// Set the post ID based on the slug.
+	$request->set_param('id', $query->post->ID );
+
+	return $response;
+}
+add_filter('rest_request_before_callbacks', 'gutenberg_transform_slug_to_post_id', 10, 3 );
